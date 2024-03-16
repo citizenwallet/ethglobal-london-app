@@ -8,6 +8,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@account-abstraction/contracts/interfaces/IEntryPoint.sol";
 
 import "./Card.sol";
+import "./interfaces/IOwnable.sol";
 import "./interfaces/ITokenEntryPoint.sol";
 import "./interfaces/IWhitelist.sol";
 import "./interfaces/IWithdrawable.sol";
@@ -96,10 +97,9 @@ contract CardManager is IWhitelist {
     }
 
     // allow card ownership to be given away
-    function transferCardOwnership(
-        Card card,
-        address newOwner
-    ) public onlyOwner {
+    function transferCardOwnership(bytes32 cardHash, address newOwner) public {
+        IOwnable card = IOwnable(getCardAddress(cardHash));
+
         card.transferOwnership(newOwner);
     }
 

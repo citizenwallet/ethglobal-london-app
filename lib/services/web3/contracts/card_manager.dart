@@ -47,4 +47,32 @@ class CardManagerContract {
 
     return result[0] as EthereumAddress;
   }
+
+  Future<Uint8List> createAccountInitCode(Uint8List hash) async {
+    final function = rcontract.function('createCard');
+
+    final callData = function.encodeCall([hash]);
+
+    return hexToBytes('$addr${bytesToHex(callData)}');
+  }
+
+  Uint8List createAccountCallData(Uint8List hash) {
+    final function = rcontract.function('createCard');
+
+    final callData = function.encodeCall([hash]);
+
+    return callData;
+  }
+
+  Uint8List withdrawCallData(
+      String card, String token, String to, BigInt amount) {
+    final function = rcontract.function('withdraw');
+
+    return function.encodeCall([
+      EthereumAddress.fromHex(card),
+      EthereumAddress.fromHex(token),
+      EthereumAddress.fromHex(to),
+      amount
+    ]);
+  }
 }

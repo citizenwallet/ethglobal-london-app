@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ScanState with ChangeNotifier {
   bool loading = true;
   bool ready = false;
-  bool scanning = false;
+  bool purchasing = false;
 
   void loadScanner() {
     loading = true;
@@ -23,13 +23,13 @@ class ScanState with ChangeNotifier {
     notifyListeners();
   }
 
-  void startScanning() {
-    scanning = true;
+  void startPurchasing() {
+    purchasing = true;
     notifyListeners();
   }
 
-  void stopScanning() {
-    scanning = false;
+  void stopPurchasing() {
+    purchasing = false;
     notifyListeners();
   }
 }

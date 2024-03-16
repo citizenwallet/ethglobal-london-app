@@ -33,6 +33,7 @@ import "./interfaces/IWithdrawable.sol";
  */
 contract Card is
     IWithdrawable,
+    IOwnable,
     IERC1271,
     BaseAccount,
     TokenCallbackHandler,

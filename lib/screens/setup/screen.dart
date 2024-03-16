@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:scanner/state/products/logic.dart';
 import 'package:scanner/state/products/state.dart';
+import 'package:scanner/utils/currency.dart';
 import 'package:scanner/utils/formatters.dart';
 
 class SetupScreen extends StatefulWidget {
@@ -32,7 +33,6 @@ class _SetupScreenState extends State<SetupScreen> {
   }
 
   void handleStartScan() {
-    print('start scanning');
     GoRouter.of(context).push('/scan');
   }
 
@@ -105,7 +105,9 @@ class _SetupScreenState extends State<SetupScreen> {
                               return ListTile(
                                 leading: Image.asset(product.image),
                                 title: Text(product.name),
-                                subtitle: Text(product.price),
+                                subtitle: Text(formatCurrency(
+                                    double.tryParse(product.price) ?? 0.0,
+                                    'USDC')),
                                 trailing: IconButton(
                                   icon: const Icon(Icons.delete),
                                   onPressed: () =>

@@ -4,7 +4,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:scanner/services/nfc/service.dart';
 import 'package:scanner/services/web3/service.dart';
+import 'package:scanner/services/web3/utils.dart';
 import 'package:scanner/state/scan/state.dart';
+import 'package:scanner/utils/delay.dart';
 import 'package:web3dart/crypto.dart';
 
 class ScanLogic {
@@ -25,10 +27,29 @@ class ScanLogic {
         dotenv
             .get(kDebugMode ? 'BASE_TESTNET_RPC_URL' : 'BASE_MAINNET_RPC_URL'),
         dotenv.get(
+            kDebugMode ? 'BUNDLER_TESTNET_RPC_URL' : 'BUNDLER_MAINNET_RPC_URL'),
+        dotenv.get(
+            kDebugMode ? 'INDEXER_TESTNET_RPC_URL' : 'INDEXER_MAINNET_RPC_URL'),
+        dotenv.get(kDebugMode
+            ? 'PAYMASTER_TESTNET_RPC_URL'
+            : 'PAYMASTER_MAINNET_RPC_URL'),
+        dotenv.get(kDebugMode
+            ? 'PAYMASTER_TESTNET_CONTRACT_ADDR'
+            : 'PAYMASTER_CONTRACT_ADDR'),
+        dotenv.get(
           kDebugMode
               ? 'CARD_MANAGER_TESTNET_CONTRACT_ADDR'
               : 'CARD_MANAGER_CONTRACT_ADDR',
         ),
+        dotenv.get(kDebugMode
+            ? 'ACCOUNT_FACTORY_TESTNET_CONTRACT_ADDR'
+            : 'ACCOUNT_FACTORY_CONTRACT_ADDR'),
+        dotenv.get(
+          kDebugMode
+              ? 'ENTRYPOINT_TESTNET_CONTRACT_ADDR'
+              : 'ENTRYPOINT_CONTRACT_ADDR',
+        ),
+        dotenv.get(kDebugMode ? 'TOKEN_TESTNET_ADDR' : 'TOKEN_ADDR'),
       );
 
       _state.scannerReady();
@@ -38,35 +59,48 @@ class ScanLogic {
     _state.scannerNotReady();
   }
 
-  void start() async {
+  void purchase(String name, String amount) async {
     try {
-      _state.startScanning();
+      _state.startPurchasing();
 
-      final serialNumber = await _nfc.readSerialNumber();
-
-      print('serial number: $serialNumber');
+      final serialNumber = await _nfc.readSerialNumber(name: name);
 
       final cardHash = await _web3.getCardHash(serialNumber);
 
-      print('card hash: ${bytesToHex(cardHash, include0x: true)}');
-
       final address = await _web3.getCardAddress(cardHash);
 
-      print('card address: ${address.hexEip55}');
+      final exists = await _web3.accountExists(address.hexEip55);
+      if (!exists) {
+        final createCardCallData = _web3.createCardCallData(cardHash);
+
+        final (_, userop) = await _web3.prepareUserop(
+            [_web3.cardManagerAddress.hexEip55], [createCardCallData]);
+
+        final success = await _web3.submitUserop(userop);
+        if (!success) {
+          throw Exception('failed to create card');
+        }
+
+        await delay(const Duration(milliseconds: 1000));
+      }
+
+      final withdrawCallData = _web3.withdrawCallData(
+        address.hexEip55,
+        toUnit(amount),
+      );
+
+      final (_, userop) = await _web3.prepareUserop(
+          [_web3.cardManagerAddress.hexEip55], [withdrawCallData]);
+
+      final success = await _web3.submitUserop(userop);
+      if (!success) {
+        throw Exception('failed to withdraw');
+      }
+
+      _state.stopPurchasing();
       return;
-    } catch (e, s) {
-      print(e);
-      print(s);
-    }
-
-    _state.stopScanning();
-  }
-
-  void stop() async {
-    try {
-      await _nfc.stop();
-
-      _state.stopScanning();
     } catch (_) {}
+
+    _state.stopPurchasing();
   }
 }

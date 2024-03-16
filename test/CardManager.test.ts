@@ -102,6 +102,7 @@ describe("CardManager", function () {
       return {
         cardManager,
         serial,
+        hash,
         card,
         friend1,
       };
@@ -144,18 +145,18 @@ describe("CardManager", function () {
     });
 
     it("Should be able to transfer ownership", async function () {
-      const { cardManager, card, friend1 } = await loadFixture(
+      const { cardManager, hash, card, friend1 } = await loadFixture(
         deployCardFixture
       );
 
       expect(await card.owner()).to.not.equal(friend1.address);
 
-      await cardManager.transferCardOwnership(
-        await card.getAddress(),
-        friend1.address
-      );
+      await cardManager.transferCardOwnership(hash, friend1.address);
 
       expect(await card.owner()).to.equal(friend1.address);
+
+      await expect(cardManager.transferCardOwnership(hash, friend1.address)).to
+        .be.reverted;
     });
   });
 
