@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ScanState with ChangeNotifier {
+  String? vendorAddress;
+
   bool loading = true;
   bool ready = false;
   bool purchasing = false;
@@ -30,6 +32,11 @@ class ScanState with ChangeNotifier {
 
   void stopPurchasing() {
     purchasing = false;
+    notifyListeners();
+  }
+
+  void setVendorAddress(String? address) {
+    vendorAddress = address;
     notifyListeners();
   }
 }

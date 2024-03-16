@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:scanner/state/products/logic.dart';
@@ -87,38 +88,43 @@ class _SetupScreenState extends State<SetupScreen> {
                     inputFormatters: [_amountFormatter],
                   ),
                   Expanded(
-                    child: CustomScrollView(
-                      slivers: [
-                        const SliverToBoxAdapter(
-                          child: Text(
-                            'Products',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            childCount: products.length,
-                            (context, index) {
-                              final product = products[index];
-
-                              return ListTile(
-                                leading: Image.asset(product.image),
-                                title: Text(product.name),
-                                subtitle: Text(formatCurrency(
-                                    double.tryParse(product.price) ?? 0.0,
-                                    'USDC')),
-                                trailing: IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  onPressed: () =>
-                                      _logic.removeProduct(product.id),
+                    child: products.isEmpty
+                        ? const Center(
+                            child: Text('Add a product to proceed'),
+                          )
+                        : CustomScrollView(
+                            slivers: [
+                              const SliverToBoxAdapter(
+                                child: Text(
+                                  'Products',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                              );
-                            },
+                              ),
+                              SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                                  childCount: products.length,
+                                  (context, index) {
+                                    final product = products[index];
+
+                                    return ListTile(
+                                      leading: Image.asset(product.image),
+                                      title: Text(product.name),
+                                      subtitle: Text(formatCurrency(
+                                          double.tryParse(product.price) ?? 0.0,
+                                          'USDC')),
+                                      trailing: IconButton(
+                                        icon: const Icon(Icons.delete),
+                                        onPressed: () =>
+                                            _logic.removeProduct(product.id),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              )
+                            ],
                           ),
-                        )
-                      ],
-                    ),
                   ),
                 ],
               ),
@@ -135,14 +141,16 @@ class _SetupScreenState extends State<SetupScreen> {
               child: const Icon(Icons.add),
             ),
             const SizedBox(width: 20),
-            FloatingActionButton.extended(
-              onPressed: handleStartScan,
-              tooltip: 'Start Scanning',
-              label: const Text('Start Scanning'),
-              icon: const Icon(
-                Icons.nfc,
-              ),
-            ),
+            Opacity(
+                opacity: products.isNotEmpty ? 1 : 0.5,
+                child: FloatingActionButton.extended(
+                  onPressed: products.isNotEmpty ? handleStartScan : null,
+                  tooltip: 'Start Scanning',
+                  label: const Text('Start Scanning'),
+                  icon: const Icon(
+                    Icons.nfc,
+                  ),
+                )),
           ],
         ),
       ),

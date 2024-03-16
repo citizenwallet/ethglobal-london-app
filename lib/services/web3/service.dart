@@ -146,6 +146,7 @@ class Web3Service {
     return _cardManager.getCardAddress(hash);
   }
 
+  EthereumAddress get account => _account;
   EthereumAddress get entrypointAddress => _entryPoint.rcontract.address;
   EthereumAddress get cardManagerAddress => _cardManager.rcontract.address;
 

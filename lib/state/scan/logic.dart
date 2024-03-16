@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:scanner/services/nfc/service.dart';
@@ -7,8 +8,6 @@ import 'package:scanner/services/web3/service.dart';
 import 'package:scanner/services/web3/transfer_data.dart';
 import 'package:scanner/services/web3/utils.dart';
 import 'package:scanner/state/scan/state.dart';
-import 'package:scanner/utils/delay.dart';
-import 'package:web3dart/crypto.dart';
 
 class ScanLogic {
   final ScanState _state;
@@ -53,11 +52,21 @@ class ScanLogic {
         dotenv.get(kDebugMode ? 'TOKEN_TESTNET_ADDR' : 'TOKEN_ADDR'),
       );
 
+      _state.setVendorAddress(_web3.account.hexEip55);
+
       _state.scannerReady();
       return;
     } catch (_) {}
 
     _state.scannerNotReady();
+  }
+
+  void copyVendorAddress() {
+    try {
+      final vendorAddress = _web3.account.hexEip55;
+
+      Clipboard.setData(ClipboardData(text: vendorAddress));
+    } catch (_) {}
   }
 
   void purchase(String name, String amount) async {
