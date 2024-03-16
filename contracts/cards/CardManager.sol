@@ -10,6 +10,7 @@ import "@account-abstraction/contracts/interfaces/IEntryPoint.sol";
 import "./Card.sol";
 import "./interfaces/ITokenEntryPoint.sol";
 import "./interfaces/IWhitelist.sol";
+import "./interfaces/IWithdrawable.sol";
 
 /**
  * @title CardManager
@@ -82,6 +83,16 @@ contract CardManager is IWhitelist {
                     )
                 )
             );
+    }
+
+    // helper function for withdrawing from Cards
+    function withdraw(
+        IWithdrawable card,
+        IERC20 token,
+        address to,
+        uint256 amount
+    ) public {
+        card.withdrawTo(token, to, amount);
     }
 
     // allow card ownership to be given away

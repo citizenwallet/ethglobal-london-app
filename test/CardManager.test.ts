@@ -254,5 +254,49 @@ describe("CardManager", function () {
 
       expect(await token.balanceOf(vendor3.address)).to.equal(0);
     });
+
+    it("Whitelisted Vendors should be able to withdraw tokens using card manager", async function () {
+      const { token, cardManager, card, vendor1 } = await loadFixture(
+        deployCardFixture
+      );
+
+      const mintAmount = 100;
+
+      await token.mint(await card.getAddress(), mintAmount);
+
+      await cardManager
+        .connect(vendor1)
+        .withdraw(
+          await card.getAddress(),
+          await token.getAddress(),
+          vendor1.address,
+          10
+        );
+
+      expect(await token.balanceOf(vendor1.address)).to.equal(10);
+    });
+
+    it("Vendors who are not whitelisted should not be able to withdraw tokens using card manager", async function () {
+      const { cardManager, token, card, vendor3 } = await loadFixture(
+        deployCardFixture
+      );
+
+      const mintAmount = 100;
+
+      await token.mint(await card.getAddress(), mintAmount);
+
+      await expect(
+        cardManager
+          .connect(vendor3)
+          .withdraw(
+            await card.getAddress(),
+            await token.getAddress(),
+            vendor3.address,
+            10
+          )
+      ).to.be.reverted;
+
+      expect(await token.balanceOf(vendor3.address)).to.equal(0);
+    });
   });
 });

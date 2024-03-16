@@ -133,6 +133,22 @@ contract Card is
         token.transfer(msg.sender, amount);
     }
 
+    function withdrawTo(IERC20 token, address to, uint256 amount) external {
+        require(msg.sender == owner, "withdrawTo: sender is not owner");
+
+        require(
+            whitelist.isWhitelisted(to),
+            "withdraw: sender is not whitelisted"
+        );
+
+        require(
+            address(token) != address(0),
+            "withdraw: token address is zero"
+        );
+
+        token.transfer(to, amount);
+    }
+
     /**
      * @dev The _entryPoint member is immutable, to reduce gas consumption.  To upgrade EntryPoint,
      * a new implementation of Card must be deployed with the new EntryPoint address, then upgrading
