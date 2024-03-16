@@ -65,11 +65,11 @@ class CardManagerContract {
   }
 
   Uint8List withdrawCallData(
-      String card, String token, String to, BigInt amount) {
+      Uint8List hash, String token, String to, BigInt amount) {
     final function = rcontract.function('withdraw');
 
     return function.encodeCall([
-      EthereumAddress.fromHex(card),
+      hash,
       EthereumAddress.fromHex(token),
       EthereumAddress.fromHex(to),
       amount

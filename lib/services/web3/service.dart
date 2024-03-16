@@ -175,11 +175,11 @@ class Web3Service {
 
   /// construct withdraw call data
   Uint8List withdrawCallData(
-    String card,
+    Uint8List hash,
     BigInt amount,
   ) {
     return _cardManager.withdrawCallData(
-      card,
+      hash,
       _contractToken.addr,
       _account.hexEip55,
       amount,
@@ -231,7 +231,7 @@ class Web3Service {
       final response = await _requestPaymaster(body, legacy: legacy);
 
       return (PaymasterData.fromJson(response.result), null);
-    } catch (exception) {
+    } catch (exception, s) {
       final strerr = exception.toString();
 
       if (strerr.contains(gasFeeErrorMessage)) {

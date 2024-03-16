@@ -86,13 +86,21 @@ contract CardManager is IWhitelist {
             );
     }
 
-    // helper function for withdrawing from Cards
+    // helper function for withdrawing from Cards and creating the card if needed
     function withdraw(
-        IWithdrawable card,
+        bytes32 cardHash,
         IERC20 token,
         address to,
         uint256 amount
     ) public {
+        address cardAddress = getCardAddress(cardHash);
+        bool exists = contractExists(cardAddress);
+        if (!exists) {
+            createCard(cardHash);
+        }
+
+        IWithdrawable card = IWithdrawable(cardAddress);
+
         card.withdrawTo(token, to, amount);
     }
 
@@ -146,5 +154,15 @@ contract CardManager is IWhitelist {
      */
     function updateWhitelist(address[] memory addresses) public onlyOwner {
         _updateWhiteList(addresses);
+    }
+
+    function contractExists(
+        address contractAddress
+    ) public view returns (bool) {
+        uint size;
+        assembly {
+            size := extcodesize(contractAddress)
+        }
+        return size > 0;
     }
 }

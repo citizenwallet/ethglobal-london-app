@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:scanner/services/nfc/service.dart';
 import 'package:scanner/services/web3/service.dart';
+import 'package:scanner/services/web3/transfer_data.dart';
 import 'package:scanner/services/web3/utils.dart';
 import 'package:scanner/state/scan/state.dart';
 import 'package:scanner/utils/delay.dart';
@@ -67,32 +68,19 @@ class ScanLogic {
 
       final cardHash = await _web3.getCardHash(serialNumber);
 
-      final address = await _web3.getCardAddress(cardHash);
-
-      final exists = await _web3.accountExists(address.hexEip55);
-      if (!exists) {
-        final createCardCallData = _web3.createCardCallData(cardHash);
-
-        final (_, userop) = await _web3.prepareUserop(
-            [_web3.cardManagerAddress.hexEip55], [createCardCallData]);
-
-        final success = await _web3.submitUserop(userop);
-        if (!success) {
-          throw Exception('failed to create card');
-        }
-
-        await delay(const Duration(milliseconds: 1000));
-      }
-
       final withdrawCallData = _web3.withdrawCallData(
-        address.hexEip55,
+        cardHash,
         toUnit(amount),
       );
 
       final (_, userop) = await _web3.prepareUserop(
           [_web3.cardManagerAddress.hexEip55], [withdrawCallData]);
 
-      final success = await _web3.submitUserop(userop);
+      final data = TransferData(
+        'Purchased $name',
+      );
+
+      final success = await _web3.submitUserop(userop, data: data);
       if (!success) {
         throw Exception('failed to withdraw');
       }

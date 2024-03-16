@@ -213,6 +213,7 @@ describe("CardManager", function () {
         token,
         cardManager,
         serial,
+        hash,
         card,
         vendor1,
         vendor3,
@@ -257,7 +258,7 @@ describe("CardManager", function () {
     });
 
     it("Whitelisted Vendors should be able to withdraw tokens using card manager", async function () {
-      const { token, cardManager, card, vendor1 } = await loadFixture(
+      const { token, cardManager, hash, card, vendor1 } = await loadFixture(
         deployCardFixture
       );
 
@@ -267,18 +268,13 @@ describe("CardManager", function () {
 
       await cardManager
         .connect(vendor1)
-        .withdraw(
-          await card.getAddress(),
-          await token.getAddress(),
-          vendor1.address,
-          10
-        );
+        .withdraw(hash, await token.getAddress(), vendor1.address, 10);
 
       expect(await token.balanceOf(vendor1.address)).to.equal(10);
     });
 
     it("Vendors who are not whitelisted should not be able to withdraw tokens using card manager", async function () {
-      const { cardManager, token, card, vendor3 } = await loadFixture(
+      const { cardManager, token, hash, card, vendor3 } = await loadFixture(
         deployCardFixture
       );
 
@@ -289,12 +285,7 @@ describe("CardManager", function () {
       await expect(
         cardManager
           .connect(vendor3)
-          .withdraw(
-            await card.getAddress(),
-            await token.getAddress(),
-            vendor3.address,
-            10
-          )
+          .withdraw(hash, await token.getAddress(), vendor3.address, 10)
       ).to.be.reverted;
 
       expect(await token.balanceOf(vendor3.address)).to.equal(0);
