@@ -8,6 +8,8 @@
     "test": "test"
   },
   "scripts": {
+    "deploy": "hardhat run scripts/deploy.ts --network base",
+    "deploy-testnet": "hardhat run scripts/deploy.ts --network base_testnet",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "cw",

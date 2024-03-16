@@ -2,7 +2,6 @@ import "@openzeppelin/hardhat-upgrades";
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import { config } from "dotenv";
-import { parseUnits } from "ethers";
 
 config();
 
@@ -18,23 +17,35 @@ const hhconfig: HardhatUserConfig = {
     },
   },
   networks: {
-    base_mainnet: {
+    base: {
       url: process.env.BASE_MAINNET_RPC_URL,
       accounts: [process.env.DEPLOYER_PRIVATE_KEY || "0x0"],
-      gasPrice: Number(parseUnits("30", "gwei")), // this is 30 Gwei
+    },
+    base_testnet: {
+      url: process.env.BASE_TESTNET_RPC_URL,
+      accounts: [process.env.DEPLOYER_PRIVATE_KEY || "0x0"],
     },
   },
   etherscan: {
     apiKey: {
-      base_mainnet: process.env.BASE_MAINNET_ETHERSCAN_API_KEY || "",
+      base: process.env.BASE_MAINNET_ETHERSCAN_API_KEY || "",
+      base_testnet: process.env.BASE_TESTNET_ETHERSCAN_API_KEY || "",
     },
     customChains: [
       {
-        network: "base_mainnet",
+        network: "base",
         chainId: 8453,
         urls: {
           apiURL: "https://api.basescan.org/api",
           browserURL: "https://basescan.org",
+        },
+      },
+      {
+        network: "base_testnet",
+        chainId: 84532,
+        urls: {
+          apiURL: "https://api-sepolia.basescan.org/api",
+          browserURL: "https://sepolia.basescan.org/",
         },
       },
     ],
