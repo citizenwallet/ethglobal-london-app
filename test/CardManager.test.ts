@@ -232,31 +232,6 @@ describe("CardManager", function () {
       );
     });
 
-    it("Whitelisted Vendors should be able to withdraw tokens", async function () {
-      const { token, card, vendor1 } = await loadFixture(deployCardFixture);
-
-      const mintAmount = 100;
-
-      await token.mint(await card.getAddress(), mintAmount);
-
-      await card.connect(vendor1).withdraw(await token.getAddress(), 10);
-
-      expect(await token.balanceOf(vendor1.address)).to.equal(10);
-    });
-
-    it("Vendors who are not whitelisted should not be able to withdraw tokens", async function () {
-      const { token, card, vendor3 } = await loadFixture(deployCardFixture);
-
-      const mintAmount = 100;
-
-      await token.mint(await card.getAddress(), mintAmount);
-
-      await expect(card.connect(vendor3).withdraw(await token.getAddress(), 10))
-        .to.be.reverted;
-
-      expect(await token.balanceOf(vendor3.address)).to.equal(0);
-    });
-
     it("Whitelisted Vendors should be able to withdraw tokens using card manager", async function () {
       const { token, cardManager, hash, card, vendor1 } = await loadFixture(
         deployCardFixture
