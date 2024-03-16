@@ -69,10 +69,10 @@ contract CardManager is IWhitelist {
     /**
      * calculate the counterfactual address of this card as it would be returned by createCard()
      */
-    function getCardAddress(bytes32 codeHash) public view returns (address) {
+    function getCardAddress(bytes32 cardHash) public view returns (address) {
         return
             Create2.computeAddress(
-                codeHash,
+                cardHash,
                 keccak256(
                     abi.encodePacked(
                         type(ERC1967Proxy).creationCode,
