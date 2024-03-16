@@ -120,20 +120,6 @@ contract Card is
     }
 
     // IWithdrawable
-    function withdraw(IERC20 token, uint256 amount) public {
-        require(
-            whitelist.isWhitelisted(msg.sender),
-            "withdraw: sender is not whitelisted"
-        );
-
-        require(
-            address(token) != address(0),
-            "withdraw: token address is zero"
-        );
-
-        token.transfer(msg.sender, amount);
-    }
-
     function withdrawTo(IERC20 token, address to, uint256 amount) external {
         require(msg.sender == owner, "withdrawTo: sender is not owner");
 
