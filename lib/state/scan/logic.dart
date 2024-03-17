@@ -26,13 +26,10 @@ class ScanLogic {
       await _web3.init(
         dotenv
             .get(kDebugMode ? 'BASE_TESTNET_RPC_URL' : 'BASE_MAINNET_RPC_URL'),
+        dotenv.get(kDebugMode ? 'BUNDLER_TESTNET_RPC_URL' : 'BUNDLER_RPC_URL'),
+        dotenv.get(kDebugMode ? 'INDEXER_TESTNET_RPC_URL' : 'INDEXER_RPC_URL'),
         dotenv.get(
-            kDebugMode ? 'BUNDLER_TESTNET_RPC_URL' : 'BUNDLER_MAINNET_RPC_URL'),
-        dotenv.get(
-            kDebugMode ? 'INDEXER_TESTNET_RPC_URL' : 'INDEXER_MAINNET_RPC_URL'),
-        dotenv.get(kDebugMode
-            ? 'PAYMASTER_TESTNET_RPC_URL'
-            : 'PAYMASTER_MAINNET_RPC_URL'),
+            kDebugMode ? 'PAYMASTER_TESTNET_RPC_URL' : 'PAYMASTER_RPC_URL'),
         dotenv.get(kDebugMode
             ? 'PAYMASTER_TESTNET_CONTRACT_ADDR'
             : 'PAYMASTER_CONTRACT_ADDR'),
