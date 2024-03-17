@@ -1,6 +1,8 @@
 # NFC Wallet
 Turn any NFC tag into an abstracted account on @Base and tap to pay at whitelisted stations.
 
+Keep in mind that the code is stored in 2 separate Git repos NFC Webapp Read: https://github.com/citizenwallet/ethglobal-london-webapp 
+
 <img width="1567" alt="Screenshot 2024-03-17 at 2 33 18 AM" src="https://github.com/citizenwallet/ethglobal-london-app/assets/74358/3a4487cb-1eba-43df-b13b-46b04bdf7c43">
 
 - Presentation ([PDF](https://drive.google.com/open?id=1PhEhAsJCYNqnLX4w0aG8ymtfUgd8WHib&usp=drive_fs))
