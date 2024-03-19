@@ -40,9 +40,6 @@ Next to the NFC wallet we implemented a native NFC payment terminal/PoS applicat
 
 For security reasons the withdrawal devices need to be whitelisted to be able to withdraw funds from the cards.
 
-## How it's made
-Tell us about how you built this project; the nitty-gritty details. What technologies did you use? How are they pieced together? If you used any partner technologies, how did it benefit your project? Did you do anything particularly hacky that's notable and worth mentioning?
-
 ## Cards & Tags
 **Tech:** Solidity, ERC4337, ERC20, Smart Contract Accounts, NFC Web API, NFC (iOS & Android)
 **Purpose:** Provide something physical which has a unique identifier that people can use to hold and pay with assets on chain. Side goal: convert all ETHGlobal wristbands into Smart Accounts.
