@@ -5,7 +5,7 @@ Keep in mind that the code is stored in 2 separate Git repos NFC Webapp Read: ht
 
 <img width="1567" alt="Screenshot 2024-03-17 at 2 33 18 AM" src="https://github.com/citizenwallet/ethglobal-london-app/assets/74358/3a4487cb-1eba-43df-b13b-46b04bdf7c43">
 
-- Presentation ([PDF](https://drive.google.com/open?id=1PhEhAsJCYNqnLX4w0aG8ymtfUgd8WHib&usp=drive_fs))
+- Presentation ([PDF](https://drive.google.com/file/d/1Ph_7cQGZvrkj3zASVVKsac3wuu9phT2F/view?usp=drive_link))
 - Video ([Google Drive](https://drive.google.com/open?id=1PgxUp80CbuqSbbKbGT0N1qlAdbtd8SNz&usp=drive_fs))
 
 
