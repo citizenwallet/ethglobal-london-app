@@ -43,10 +43,15 @@ async function main() {
   );
 
   console.log("🚀 request sent...");
-  await deployedContract.waitForDeployment();
+  const tx = deployedContract.deploymentTransaction();
+  if (!tx) {
+    console.log("Error deploying contract");
+    process.exit();
+  }
 
-  // wait 2 seconds for the transaction to be mined
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  console.log("⏳ waiting to be confirmed...");
+  // wait for the transaction to be mined
+  await tx.wait(5);
 
   console.log("🧐 verifying...\n");
 
