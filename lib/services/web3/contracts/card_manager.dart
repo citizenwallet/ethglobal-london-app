@@ -25,6 +25,8 @@ class CardManagerContract {
   Future<Uint8List> getCardHash(String serial) async {
     BigInt bigIntSerial = BigInt.parse(serial, radix: 16);
 
+    print(bigIntSerial);
+
     final function = rcontract.function('getCardHash');
 
     final result = await client.call(
@@ -32,6 +34,8 @@ class CardManagerContract {
       function: function,
       params: [bigIntSerial],
     );
+
+    print(result);
 
     return result[0];
   }

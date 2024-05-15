@@ -73,7 +73,7 @@ class _SetupScreenState extends State<SetupScreen> {
                     controller: priceController,
                     decoration: const InputDecoration(
                       labelText: 'Price',
-                      prefix: Text('USDC '),
+                      prefix: Text('EURb '),
                     ),
                     maxLines: 1,
                     maxLength: 25,
@@ -113,7 +113,7 @@ class _SetupScreenState extends State<SetupScreen> {
                                       title: Text(product.name),
                                       subtitle: Text(formatCurrency(
                                           double.tryParse(product.price) ?? 0.0,
-                                          'USDC')),
+                                          'EURb')),
                                       trailing: IconButton(
                                         icon: const Icon(Icons.delete),
                                         onPressed: () =>

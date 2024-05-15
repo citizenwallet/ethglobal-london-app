@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:nfc_manager/nfc_manager.dart';
 
 class NFCService {
-  Future<String> readSerialNumber({String? name}) async {
+  Future<String> readSerialNumber(
+      {String? message, String? successMessage}) async {
     // Check availability
     bool isAvailable = await NfcManager.instance.isAvailable();
 
@@ -14,9 +15,7 @@ class NFCService {
     final completer = Completer<String>();
 
     NfcManager.instance.startSession(
-      alertMessage: name != null
-          ? 'Scan your bracelet to purchase $name'
-          : 'Scan your bracelet',
+      alertMessage: message ?? 'Scan to confirm',
       onDiscovered: (NfcTag tag) async {
         final List<int> identifier = tag.data['mifare']['identifier'];
 
@@ -27,7 +26,8 @@ class NFCService {
         if (completer.isCompleted) return;
         completer.complete(uid);
 
-        await NfcManager.instance.stopSession(alertMessage: 'Thank you!');
+        await NfcManager.instance
+            .stopSession(alertMessage: successMessage ?? 'Confirmed');
       },
       onError: (error) async {
         if (completer.isCompleted) return;

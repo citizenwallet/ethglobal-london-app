@@ -15,8 +15,7 @@ class ERC20Contract {
     final rawJson = jsonDecode(await rootBundle.loadString(
         'artifacts/@openzeppelin/contracts/token/ERC20/IERC20.sol/IERC20.json'));
 
-    final cabi =
-        ContractAbi.fromJson(jsonEncode(rawJson['abi']), 'AccountFactory');
+    final cabi = ContractAbi.fromJson(jsonEncode(rawJson['abi']), 'IERC20');
 
     rcontract = DeployedContract(cabi, EthereumAddress.fromHex(addr));
   }

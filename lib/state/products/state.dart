@@ -25,7 +25,7 @@ class ProductsState with ChangeNotifier {
     final product = Product(
       id: DateTime.now().toString(),
       name: nameController.text,
-      price: priceController.text,
+      price: priceController.text.replaceAll(",", "."),
       image: 'assets/product.png',
     );
 
